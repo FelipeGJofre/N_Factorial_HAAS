@@ -9,8 +9,7 @@ import Form from './forms'
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    {/* <App /> */}
-    <CreateProject/>
+    <App />
   </React.StrictMode>
 );
 
