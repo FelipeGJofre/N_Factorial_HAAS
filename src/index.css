@@ -10,24 +10,24 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  height: 100vh;
+  height: 98vh;
   
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   background-color: #555555;
   background-blend-mode: multiply;
-  animation: bg-fade 50s ease-in-out infinite;
+  animation: bg-fade 40s ease-in-out infinite;
 }
 
 @keyframes bg-fade {
   0%   {background-image: url('./Assets/bg_data.png');}
-  24%  {background-image: url('./Assets/bg_data.png');}
+  22%  {background-image: url('./Assets/bg_data.png');}
   25%  {background-image: url('./Assets/bg_gpu.png');}
-  49%  {background-image: url('./Assets/bg_gpu.png');}
+  47%  {background-image: url('./Assets/bg_gpu.png');}
   50%  {background-image: url('./Assets/bg_hdd.png');}
-  74%  {background-image: url('./Assets/bg_hdd.png');}
+  72%  {background-image: url('./Assets/bg_hdd.png');}
   75%  {background-image: url('./Assets/bg_mem.png');}
-  99%  {background-image: url('./Assets/bg_mem.png');}
+  97%  {background-image: url('./Assets/bg_mem.png');}
   100% {background-image: url('./Assets/bg_data.png');}
 }
