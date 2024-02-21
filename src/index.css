@@ -1,3 +1,8 @@
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -6,15 +11,23 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
-  background-image: url('./Assets/bg.png');
+  
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  background-color: #8c8c8c;
+  background-color: #555555;
   background-blend-mode: multiply;
+  animation: bg-fade 50s ease-in-out infinite;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@keyframes bg-fade {
+  0%   {background-image: url('./Assets/bg_data.png');}
+  24%  {background-image: url('./Assets/bg_data.png');}
+  25%  {background-image: url('./Assets/bg_gpu.png');}
+  49%  {background-image: url('./Assets/bg_gpu.png');}
+  50%  {background-image: url('./Assets/bg_hdd.png');}
+  74%  {background-image: url('./Assets/bg_hdd.png');}
+  75%  {background-image: url('./Assets/bg_mem.png');}
+  99%  {background-image: url('./Assets/bg_mem.png');}
+  100% {background-image: url('./Assets/bg_data.png');}
 }
