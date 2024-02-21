@@ -1,0 +1,38 @@
+.color {
+    height: 100vh;
+    width: 100vw;
+    text-align: right;
+    font-size: 30px;
+    font-style: italic;
+    font-family: fantasy;
+    color: #414141;
+    animation: color-shift infinite 2s linear;
+}
+
+.image {
+    height: 50vh;
+    width: 50vw;
+    padding: 50px;
+    animation: image-spin infinite 7s alternate linear;
+}
+
+@keyframes image-spin {
+    from {
+      transform: rotate(0deg);
+      height: 25vh;
+      width: 25vw;
+    }
+    to {
+      transform: rotate(360deg);
+      height: 60vh;
+      width: 60vh;
+    }
+}
+
+@keyframes color-shift {
+    0%   {background-color: #ff0000;}
+    5%  {background-color: #6fff00;}
+    50%  {background-color: #00ffbb;}
+    95%  {background-color: #5100ff;}
+    100% {background-color: #ff0000;}
+}
