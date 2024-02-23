@@ -1,0 +1,2 @@
+{"user": "AAAA", "email": "BBBB", "password": "CCCC"}
+{"user": "Varun", "email": "Arumugam", "password": "Microarch"}

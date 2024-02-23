@@ -34,7 +34,12 @@ const LoginSignUp = () => {
         .catch(error => {
             // Handle error
             console.error('There was a problem with your fetch operation:', error);
-        });
+        })
+        setData({
+            user: "",
+            email: "",
+            password: ""
+        })
     }
     const handleInputChange = (event) => {
         const { name, value } = event.target;
