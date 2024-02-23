@@ -8,7 +8,6 @@ app = Flask(__name__, template_folder='./')
 def login():
     data = request.json
     # Process the received data
-    # Example: Access data['user'], data['email'], data['password']
     print(data)
     return jsonify({'message': 'Received login data successfully'})
 
