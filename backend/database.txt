@@ -1,2 +1,7 @@
 {"user": "AAAA", "email": "BBBB", "password": "CCCC"}
 {"user": "Varun", "email": "Arumugam", "password": "Microarch"}
+{"user": "Ed", "email": "Gar", "password": "Turcotte"}
+{"user": "Felipe", "email": "asd", "password": "321"}
+{"user": "SWE", "email": "lab", "password": "react"}
+{"user": "123", "email": "456", "password": "789"}
+{"user": "fish", "email": "tacos", "password": "yummy"}

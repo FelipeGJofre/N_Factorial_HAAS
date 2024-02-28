@@ -68,7 +68,7 @@
 
 .submit-container{
     display: flex;
-    width: 95%;
+    width: 45%;
     align-self: center;
     justify-content: center;
     gap: 30px;
@@ -79,7 +79,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 40%;
+    width: 100%;
     height: 50px;
     color: #fff;
     background-color: #b47b00;
