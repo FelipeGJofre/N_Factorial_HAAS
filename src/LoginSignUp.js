@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 import './LoginSignUp.css'
 import user_icon from './Assets/person.png'
 import email_icon from './Assets/email.png'
 import password_icon from './Assets/password.png'
 
 const LoginSignUp = () => {
+    const navigate = useNavigate();
     const [action, setAction] = useState("Sign Up")
     const [user_info, userData] = useState({
         user: "",
@@ -30,6 +32,8 @@ const LoginSignUp = () => {
         .then(data => {
             // Handle response data from Flask if needed
             console.log(data);
+            // Go to the main app page
+            navigate('/app');
         })
         .catch(error => {
             // Handle error
@@ -60,6 +64,8 @@ const LoginSignUp = () => {
         .then(data => {
             // Handle response data from Flask if needed
             console.log(data);
+            // Go to the main app page
+            navigate('/app');
         })
         .catch(error => {
             // Handle error
