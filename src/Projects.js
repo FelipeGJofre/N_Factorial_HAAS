@@ -1,6 +1,7 @@
 
 import Box3 from './Box3';
 import React from 'react';
+import LogOutButton from './log_out'
 
 class Projects extends React.Component {
     constructor(props) {
@@ -20,6 +21,7 @@ class Projects extends React.Component {
           <Box3 letter="1" onJoinClick={this.handleJoinClick} isJoined={this.state.joinedBox === "1"} />
           <Box3 letter="2" onJoinClick={this.handleJoinClick} isJoined={this.state.joinedBox === "2"} />
           <Box3 letter="3" onJoinClick={this.handleJoinClick} isJoined={this.state.joinedBox === "3"} />
+          <LogOutButton></LogOutButton>
         </div>
       );
     }
