@@ -11,6 +11,16 @@ CORS(app)  # Handle CORS
 def signup():
     data = request.json
     # Process the received data
+    check_file = open("database.txt", "r")
+    # Check whether it exists already or not
+    for line in check_file.readlines():
+        dbdata = json.loads(decrypt(line.strip(), 3, 1))
+        if data['email'] == dbdata['email'] and data['password'] == dbdata['password']:
+            print("User already exists!")
+            check_file.close()
+            return jsonify({'message': 'User already exists!'})
+        
+    check_file.close()
     file = open("database.txt", "a")
     file.write(encrypt(json.dumps(data), 3, 1) + "\n")
     file.close()

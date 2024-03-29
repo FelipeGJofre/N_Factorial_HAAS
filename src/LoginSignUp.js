@@ -32,8 +32,15 @@ const LoginSignUp = () => {
         .then(data => {
             // Handle response data from Flask if needed
             console.log(data);
+            if(data['message'] == "User already exists!")
+            {
+                console.log("Finally works!")
+                setAction("Login")
+            }
+            else {
             // Go to the main app page
-            navigate('/app');
+                navigate('/app');
+            }
         })
         .catch(error => {
             // Handle error
@@ -92,7 +99,7 @@ const LoginSignUp = () => {
         <div className='input-div'>
             {action=== "Login"? null : <div className="input">
                 <img src={user_icon} alt="" />
-                <input type="text" placeholder="Username" name="user" id="" value={user_info.user} onChange={handleInputChange}/>
+                <input type="text" placeholder="Project ID" name="user" id="" value={user_info.user} onChange={handleInputChange}/>
             </div>}
             <div className="input">
                 <img src={email_icon} alt="" />
