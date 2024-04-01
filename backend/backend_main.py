@@ -25,7 +25,7 @@ def signup():
     file.write(encrypt(json.dumps(data), 3, 1) + "\n")
     file.close()
     print(data)
-    return jsonify({'message': 'Received sign up data successfully'})
+    return jsonify({'message': 'Received sign up data successfully'})   
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
