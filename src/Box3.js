@@ -21,27 +21,39 @@ class Box3 extends React.Component {
   }
 
   handleButtonClick1 = () => {
-    this.setState(prevState => ({
-      HWSet1: prevState.HWSet1 + parseInt(this.state.input1)
-    }));
+    const updatedHWSet1 = parseInt(this.state.input1) + this.state.HWSet1;
+    if (updatedHWSet1 <= 100) {
+      this.setState(prevState => ({
+        HWSet1: updatedHWSet1
+      }));
+    }
   }
 
   handleCheckout1 = () => {
-    this.setState(prevState => ({
-      HWSet1: prevState.HWSet1 - parseInt(this.state.input1)
-    }));
+    const updatedHWSet1 = this.state.HWSet1 - parseInt(this.state.input1);
+    if (updatedHWSet1 >= 0) {
+      this.setState(prevState => ({
+        HWSet1: updatedHWSet1
+      }));
+    }
   }
 
   handleButtonClick2 = () => {
-    this.setState(prevState => ({
-      HWSet2: prevState.HWSet2 + parseInt(this.state.input2)
-    }));
+    const updatedHWSet2 = parseInt(this.state.input1) + this.state.HWSet2;
+    if (updatedHWSet2 <= 100) {
+      this.setState(prevState => ({
+        HWSet2: updatedHWSet2
+      }));
+    }
   }
 
   handleCheckout2 = () => {
-    this.setState(prevState => ({
-      HWSet2: prevState.HWSet2 - parseInt(this.state.input2)
-    }));
+    const updatedHWSet2 = this.state.HWSet2 - parseInt(this.state.input1);
+    if (updatedHWSet2 >= 0) {
+      this.setState(prevState => ({
+        HWSet2: updatedHWSet2
+      }));
+    }
   }
 
   handleJoinClick = () => {
