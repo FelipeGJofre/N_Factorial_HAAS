@@ -4,13 +4,42 @@ import React from 'react';
 import LogOutButton from './log_out'
 
 class Projects extends React.Component {
+    
     constructor(props) {
       super(props);
       this.state = {
-        joinedBox: null
+        url: window.location.href, // Get the current URL
+        lastString: '',
+        joinedBox: null,
       };
     }
-  
+
+    componentDidMount(){
+      this.extractLastString();
+    }
+
+    extractLastString = () => {
+      const { url } = this.state;
+      const segments = url.split('/').filter(segment => segment !== ''); // Split the pathname by slashes and remove empty segments
+      const lastString = segments.pop(); // Get the last segment
+      console.log(lastString)
+      this.setState({ lastString });
+      fetch('/get_projects', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ data: lastString })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+
     handleJoinClick = (boxLetter) => {
       this.setState({ joinedBox: boxLetter });
     }

@@ -39,7 +39,8 @@ const LoginSignUp = () => {
             }
             else {
             // Go to the main app page
-                navigate('/app');
+                const name = '/app/' + user_info.email
+                navigate(name);
             }
         })
         .catch(error => {
@@ -71,7 +72,8 @@ const LoginSignUp = () => {
         .then(data => {
             if(data['message'] == "Found user data successfully")
             {
-                navigate('/app');
+                const name = '/app/' + user_info.email
+                navigate(name);
             }
             // Handle response data from Flask if needed
             console.log(data);

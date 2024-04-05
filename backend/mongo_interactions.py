@@ -18,6 +18,7 @@ def setup():
     except Exception as e:
         print(e)
 
+
 def login(userID, password):
     db = client["Users"]
     # Checks if user is a collection
@@ -49,7 +50,7 @@ def signup(userID, password, projectID):
             )
             return True;
         
-        array = user.find_one({}, {"projects"})
+        # array = user.find_one({}, {"projects"})
         user.update_one({}, { "$addToSet": {"projects" : projectID} })
         return True;
     else:
@@ -73,7 +74,27 @@ def signup(userID, password, projectID):
                 }
             )
             return True;
-        array = user.find_one({}, {"projects"})
         user.update_one({}, { "$addToSet": {"projects" : projectID} })
         return True;
-        
+
+def get_projects(user) -> dict:
+    dataret = []
+    db = client["Users"]
+    user = db[user]
+    # Todo: This array not being grabbed properly, shits fucked
+    array = user.find_one({}, {"projects"})['projects']
+    print(array)
+    
+    hw_1_available = array
+    projects = client["Projects"]
+    for project in array:
+        db_proj = projects[project]
+        selected_proj = db_proj.find_one({})
+        dataret.append({
+            "name" : project,
+            "hw_set_1_cap" :       selected_proj["hw_set_1_cap"],
+            "hw_set_2_cap" :       selected_proj["hw_set_2_cap"],
+            "hw_set_1_available" : selected_proj["hw_set_1_available"],
+            "hw_set_2_available" : selected_proj["hw_set_2_available"] 
+        })
+    return dataret

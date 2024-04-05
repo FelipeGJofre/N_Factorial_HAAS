@@ -7,8 +7,8 @@ class Box3 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      HWSet1: 0,
-      HWSet2: 0,
+      HWSet1: 100,
+      HWSet2: 100,
       input1: '',
       input2: '',
     };

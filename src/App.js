@@ -9,7 +9,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<LoginSignUp />} />
-        <Route path="/app" element={<MainApp />} />
+        <Route path="/app/:name" element={<MainApp />} />
       </Routes>
     </Router>
   );

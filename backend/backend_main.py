@@ -48,7 +48,12 @@ def login():
     # print(rtnmsg)
     # return jsonify({'message': 'Found user data successfully'})
 
-
+@app.route("/get_projects", methods=["GET", "POST"])
+def get_projects():
+    querydata = request.json
+    print(querydata)
+    result = mongo_interactions.get_projects(querydata['data'])
+    return jsonify(result)
 # Define a route for the "/about" URL with GET met
 
 if __name__ == "__main__":
