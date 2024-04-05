@@ -9,7 +9,7 @@ const LoginSignUp = () => {
     const navigate = useNavigate();
     const [action, setAction] = useState("Sign Up")
     const [user_info, userData] = useState({
-        user: "",
+        projectID: "",
         email: "",
         password: ""
     })
@@ -47,7 +47,7 @@ const LoginSignUp = () => {
             console.error('There was a problem with your fetch operation:', error);
         })
         userData({
-            user: "",
+            projectID: "",
             email: "",
             password: ""
         })
@@ -69,10 +69,13 @@ const LoginSignUp = () => {
             return response.json();
         })
         .then(data => {
+            if(data['message'] == "Found user data successfully")
+            {
+                navigate('/app');
+            }
             // Handle response data from Flask if needed
             console.log(data);
             // Go to the main app page
-            navigate('/app');
         })
         .catch(error => {
             // Handle error
@@ -99,7 +102,7 @@ const LoginSignUp = () => {
         <div className='input-div'>
             {action=== "Login"? null : <div className="input">
                 <img src={user_icon} alt="" />
-                <input type="text" placeholder="Project ID" name="user" id="" value={user_info.user} onChange={handleInputChange}/>
+                <input type="text" placeholder="Project ID" name="projectID" id="" value={user_info.projectID} onChange={handleInputChange}/>
             </div>}
             <div className="input">
                 <img src={email_icon} alt="" />
