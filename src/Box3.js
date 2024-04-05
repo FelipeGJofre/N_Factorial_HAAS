@@ -7,8 +7,10 @@ class Box3 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      HWSet1: 100,
-      HWSet2: 100,
+      HWSet1_cap: this.props.HWSet1_cap,
+      HWSet1_available: this.props.HWSet1_available,
+      HWSet2_cap: this.props.HWSet2_cap,
+      HWSet2_available: this.props.HWSet2_available,
       input1: '',
       input2: '',
     };
@@ -60,7 +62,7 @@ class Box3 extends React.Component {
     if (this.props.isJoined) {
       this.props.onJoinClick(null);
     } else {
-      this.props.onJoinClick(this.props.letter);
+      this.props.onJoinClick(this.props.name);
     }
   }
 
@@ -88,7 +90,7 @@ class Box3 extends React.Component {
           alignItems: 'center',
           width: '100%',
         }}>
-          <strong style={{ fontSize: '24px', marginRight: '20px' }}>Project Name {this.props.letter}</strong>
+          <strong style={{ fontSize: '24px', marginRight: '20px' }}>Project {this.props.name}</strong>
           <span>List of authorized users</span>
         </div>
         <div style={{
@@ -98,7 +100,7 @@ class Box3 extends React.Component {
           display: 'flex',
           alignItems: 'center',
         }}>
-          <strong style={{ fontSize: '24px', marginRight: '20px' }}>HWSet1: {this.state.HWSet1}/100</strong>
+          <strong style={{ fontSize: '24px', marginRight: '20px' }}>HWSet1: {this.state.HWSet1_available}/{this.state.HWSet1_cap}</strong>
           <input type="text" name="input1" value={this.state.input1} onChange={this.handleInputChange} placeholder="QTY:" style={{ width: '50px', height: '24px', marginRight: '20px' }} disabled={isDisabled} />
           <button onClick={this.handleButtonClick1} disabled={isDisabled}>Check In</button>
           <button onClick={this.handleCheckout1} disabled={isDisabled}>Check Out</button>
@@ -110,7 +112,7 @@ class Box3 extends React.Component {
             display: 'flex',
             alignItems: 'center',
         }}>
-            <strong style={{ fontSize: '24px', marginRight: '20px' }}>HWSet2: {this.state.HWSet2}/100</strong>
+            <strong style={{ fontSize: '24px', marginRight: '20px' }}>HWSet2: {this.state.HWSet2_available}/{this.state.HWSet2_cap}</strong>
             <input style={{ marginRight: '20px', width: '50px', height: '24px' }} type="text" name="input2" value={this.state.input2} onChange={this.handleInputChange} placeholder="QTY:" disabled={isDisabled} />
             <button onClick={this.handleButtonClick2} disabled={isDisabled}>Check In</button>
             <button onClick={this.handleCheckout2} disabled={isDisabled}>Check Out</button>

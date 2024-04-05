@@ -4,13 +4,13 @@ import React from 'react';
 import LogOutButton from './log_out'
 
 class Projects extends React.Component {
-    
     constructor(props) {
       super(props);
       this.state = {
         url: window.location.href, // Get the current URL
         lastString: '',
         joinedBox: null,
+        data: []
       };
     }
 
@@ -33,7 +33,7 @@ class Projects extends React.Component {
       })
       .then(response => response.json())
       .then(data => {
-        console.log(data)
+        this.setState({data})
       })
       .catch(error => {
         console.error('Error:', error);
@@ -45,11 +45,12 @@ class Projects extends React.Component {
     }
   
     render() {
+      console.log(this.state.data)
       return (
         <div>
-          <Box3 letter="1" onJoinClick={this.handleJoinClick} isJoined={this.state.joinedBox === "1"} />
-          <Box3 letter="2" onJoinClick={this.handleJoinClick} isJoined={this.state.joinedBox === "2"} />
-          <Box3 letter="3" onJoinClick={this.handleJoinClick} isJoined={this.state.joinedBox === "3"} />
+          {this.state.data.map((proj) => (
+            <Box3 name={proj.name} HWSet1_cap={proj.hw_set_1_cap}  HWSet1_available={proj.hw_set_1_available} HWSet2_cap={proj.hw_set_2_cap} HWSet2_available={proj.hw_set_2_available} onJoinClick={this.handleJoinClick} isJoined={this.state.joinedBox === "1"} />
+          ))}
           <LogOutButton></LogOutButton>
         </div>
       );
@@ -57,3 +58,7 @@ class Projects extends React.Component {
   }
 
   export default Projects;
+
+            /* <Box3 name="1" onJoinClick={this.handleJoinClick} isJoined={this.state.joinedBox === "1"} />
+          <Box3 name="2" onJoinClick={this.handleJoinClick} isJoined={this.state.joinedBox === "2"} />
+          <Box3 name="3" onJoinClick={this.handleJoinClick} isJoined={this.state.joinedBox === "3"} /> */
