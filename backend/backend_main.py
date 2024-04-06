@@ -76,8 +76,9 @@ def updatehw(projectID):
 @app.route("/joinproj/<userID>/<projectID>", methods=["POST"])
 def joinProject(userID, projectID):
     print(userID, "joined", projectID)
-    mongo_interactions.join(userID, projectID)
-    return jsonify({'message': f"{userID} joined {projectID}", 'projectId': projectID})
+    if mongo_interactions.join(userID, projectID):
+        return jsonify({'message': f"{userID} joined {projectID}", 'projectId': projectID})
+    return jsonify({'message': 'Project does not exist!'})
 
 @app.route("/leaveproj/<userID>/<projectID>", methods=["POST"])
 def leaveProject(userID, projectID):
@@ -88,9 +89,11 @@ def leaveProject(userID, projectID):
 @app.route("/newproj/<userID>", methods=["POST"])
 def newProject(userID):
     querydata = request.json
+    projectname = querydata['newprojectname']
     projectID = querydata['newprojectID']
-    print(userID, "created new Project", projectID)
-    if mongo_interactions.newProject(projectID):
+    projectdesc = querydata['newprojectdesc']
+    print(userID, "created new Project", projectname)
+    if mongo_interactions.newProject(projectname, projectID, projectdesc):
         mongo_interactions.join(userID, projectID)
         return jsonify({'message': f"{userID} created new Project {projectID}", 'projectId': projectID})
     return jsonify({'message': 'Project already exists!'})

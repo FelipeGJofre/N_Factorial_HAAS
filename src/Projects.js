@@ -10,7 +10,9 @@ class Projects extends React.Component {
         lastString: '',
         data: [],
         neworexisting: true,
-        projID: ''
+        projname: '',
+        projID: '',
+        projdesc: ''
       };
     }
 
@@ -56,7 +58,9 @@ class Projects extends React.Component {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({newprojectID: this.state.projID}),
+        body: JSON.stringify({newprojectname: this.state.projname,
+                              newprojectID: this.state.projID,
+                              newprojectdesc: this.state.projdesc}),
       })
       .then(response => {
           if (!response.ok) {
@@ -91,6 +95,18 @@ class Projects extends React.Component {
           this.populateProjects(this.state.lastString);
           return response.json();
       })
+      .then(data => {
+        // Handle response data from Flask if needed
+        console.log(data);
+        if(data['message'] === "Project does not exist!")
+        {
+            this.setState({neworexisting: true})
+        }
+        else {
+        // Go to the main app page
+          this.populateProjects(this.state.lastString);
+        }
+    })
       .catch(error => {
           // Handle error
           console.error('There was a problem with your fetch operation:', error);
@@ -102,22 +118,36 @@ class Projects extends React.Component {
       return (
         <div>
           {this.state.data.map((proj) => (
-            <ProjBox name={proj.name} user={this.state.lastString} HWSet1_cap={proj.hw_set_1_cap}  HWSet1_available={proj.hw_set_1_available} HWSet2_cap={proj.hw_set_2_cap} HWSet2_available={proj.hw_set_2_available} />
+            <ProjBox projID={proj.id} name={proj.name} desc={proj.desc} user={this.state.lastString} HWSet1_cap={proj.hw_set_1_cap}  HWSet1_available={proj.hw_set_1_available} HWSet2_cap={proj.hw_set_2_cap} HWSet2_available={proj.hw_set_2_available} />
           ))}
           {this.state.neworexisting ? null :
+            <div>
               <div className="forgot-password">
                 Want to create a new project? <span onClick={()=>{this.setState({neworexisting: true})}}>Click here!</span>
               </div>
+              <div className="newproject-container" style={{height:'30px'}}>
+                <div style={{width: '85%'}}>
+                  <input type="text" name="projID" value={this.state.projID} onChange={this.handleInputChange} placeholder={this.state.neworexisting ? 'New ProjectID' : 'Existing ProjectID'} style={{width:'85%'}}/>
+                </div>
+                <div className="newproj" onClick={this.state.neworexisting ? this.handleNewProject : this.handleJoinProject}>{this.state.neworexisting ? 'Create Project' : 'Join Project'}</div>
+              </div>
+            </div>
           }
           {(!this.state.neworexisting) ? null :
+            <div>
               <div className="forgot-password">
                 Want to join an existing project? <span onClick={()=>{this.setState({neworexisting: false})}}>Click here!</span>
               </div>
+              <div className="newproject-container" style={{height:'70px'}}>
+                <div style={{width: '85%'}}>
+                  <input type="text" name="projname" value={this.state.projname} onChange={this.handleInputChange} placeholder='Project Name' style={{width:'85%'}}/>
+                  <input type="text" name="projID" value={this.state.projID} onChange={this.handleInputChange} placeholder={this.state.neworexisting ? 'New ProjectID' : 'Existing ProjectID'} style={{width:'85%'}}/>
+                  <input type="text" name="projdesc" value={this.state.projdesc} onChange={this.handleInputChange} placeholder='Brief Project Description' style={{width:'85%'}}/>
+                </div>
+                <div className="newproj" onClick={this.state.neworexisting ? this.handleNewProject : this.handleJoinProject}>{this.state.neworexisting ? 'Create Project' : 'Join Project'}</div>
+              </div>
+            </div>
           }
-          <div className="newproject-container">
-            <input type="text" name="projID" value={this.state.projID} onChange={this.handleInputChange} placeholder={this.state.neworexisting ? 'New ProjectID' : 'Existing ProjectID'} style={{width:'85%', margin:'5px'}}/>
-            <div className="newproj" onClick={this.state.neworexisting ? this.handleNewProject : this.handleJoinProject}>{this.state.neworexisting ? 'Create Project' : 'Join Project'}</div>
-          </div>
         </div>
       );
     }

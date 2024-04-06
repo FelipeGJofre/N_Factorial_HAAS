@@ -29,7 +29,7 @@ const ProjBox = (props) => {
         ...prevState,
         HWSet1_available: updatedHWSet1 }));
       
-      fetch('/updatehw/'+props.name, {
+      fetch('/updatehw/'+props.projID, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ const ProjBox = (props) => {
         ...prevState,
         HWSet1_available: updatedHWSet1 }));
 
-      fetch('/updatehw/'+props.name, {
+      fetch('/updatehw/'+props.projID, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ const ProjBox = (props) => {
         ...prevState,
         HWSet2_available: updatedHWSet2 }));
 
-      fetch('/updatehw/'+props.name, {
+      fetch('/updatehw/'+props.projID, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ const ProjBox = (props) => {
         ...prevState,
         HWSet2_available: updatedHWSet2 }));
 
-      fetch('/updatehw/'+props.name, {
+      fetch('/updatehw/'+props.projID, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ const ProjBox = (props) => {
 
   const handleJoinClick = () => {
     if(joined){
-      fetch('/leaveproj/'+props.user+'/'+props.name, {method: 'POST',})
+      fetch('/leaveproj/'+props.user+'/'+props.projID, {method: 'POST',})
       .then(response => {
           if (!response.ok) {
               throw new Error('Network response was not ok');
@@ -144,7 +144,7 @@ const ProjBox = (props) => {
           console.error('There was a problem with your fetch operation:', error);
       })
     }else{
-      fetch('/joinproj/'+props.user+'/'+props.name, {method: 'POST',})
+      fetch('/joinproj/'+props.user+'/'+props.projID, {method: 'POST',})
       .then(response => {
           if (!response.ok) {
               throw new Error('Network response was not ok');
@@ -162,7 +162,8 @@ const ProjBox = (props) => {
   return (
     <div className="box" style={joined ? {backgroundColor:'#dfdfdf'} : {backgroundColor:'gray'}}>
       <div className="box-title">
-        <strong style={{ fontSize: '24px', marginRight: '20px'}}>{props.name}</strong>
+        <strong style={{ fontSize: '40px', marginRight: '20px', width:'100%'}}>{props.name}</strong>
+        <p style={{width:'100%'}}>{props.desc}</p>
       </div>
       <div className='availcap-container'>
         <div className="availcap">
@@ -184,6 +185,7 @@ const ProjBox = (props) => {
       </div>
       <div className="join-container">
         <div className="join" onClick={handleJoinClick} style={joined ? {backgroundColor:'#b47b00'} : {backgroundColor:'#0014cd'}}>{joined ? 'Leave' : 'Join'}</div>
+        <p style={{fontSize:'10px'}}>ID={props.projID}</p>
       </div>
     </div>
   );

@@ -65,9 +65,11 @@ def getProjects(userID) -> dict:
         proj = projects[project]
         selected_proj = proj.find_one({})
         dataret.append({
-            "name" : project,
-            "hw_set_1_cap" :       selected_proj["hw_set_1_cap"],
-            "hw_set_2_cap" :       selected_proj["hw_set_2_cap"],
+            "id"                 : project,
+            "name"               : selected_proj["name"],
+            "desc"               : selected_proj["description"],
+            "hw_set_1_cap"       : selected_proj["hw_set_1_cap"],
+            "hw_set_2_cap"       : selected_proj["hw_set_2_cap"],
             "hw_set_1_available" : selected_proj["hw_set_1_available"],
             "hw_set_2_available" : selected_proj["hw_set_2_available"] 
         })
@@ -83,14 +85,17 @@ def updatehw(projectID, hwset1avail, hwset2avail):
     proj.update_one(query, newvals)
 
 def join(userID, projectID):
-    user = client["Users"][encrypt(userID, 3, 1)]
-    oldprojlist = user.find_one()["projects"]
-    newprojlist = oldprojlist.copy()
-    newprojlist.append(projectID)
-    query = {"projects": oldprojlist}
-    newval = {"$set": {"projects": newprojlist}}
-    print(query, "=>", newval)
-    user.update_one(query, newval)
+    if projectID in client["Projects"].list_collection_names():
+        user = client["Users"][encrypt(userID, 3, 1)]
+        oldprojlist = user.find_one()["projects"]
+        newprojlist = oldprojlist.copy()
+        newprojlist.append(projectID)
+        query = {"projects": oldprojlist}
+        newval = {"$set": {"projects": newprojlist}}
+        print(query, "=>", newval)
+        user.update_one(query, newval)
+        return True
+    return False
 
 def leave(userID, projectID):
     user = client["Users"][encrypt(userID, 3, 1)]
@@ -102,13 +107,15 @@ def leave(userID, projectID):
     print(query, "=>", newval)
     user.update_one(query, newval)
 
-def newProject(projectID):
+def newProject(projectname, projectID, projectdesc):
     if not projectID in client["Projects"].list_collection_names():
         newproj = client["Projects"][projectID]
-        newprojdoc = {"hw_set_1_cap": 100,
-                        "hw_set_1_available": 100,
-                        "hw_set_2_cap": 100,
-                        "hw_set_2_available": 100}
+        newprojdoc = {"name": projectname,
+                      "description": projectdesc,
+                      "hw_set_1_cap": 100,
+                      "hw_set_1_available": 100,
+                      "hw_set_2_cap": 100,
+                      "hw_set_2_available": 100}
         newproj.insert_one(newprojdoc)
         return True
     return False
