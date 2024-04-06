@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
-import './LoginSignUp.css'
+import './nfactorial.css'
 import user_icon from './Assets/person.png'
-import email_icon from './Assets/email.png'
 import password_icon from './Assets/password.png'
 
 const LoginSignUp = () => {
     const navigate = useNavigate();
     const [action, setAction] = useState("Sign Up")
     const [user_info, userData] = useState({
-        projectID: "",
-        email: "",
+        userID: "",
         password: ""
     })
 
@@ -32,14 +30,14 @@ const LoginSignUp = () => {
         .then(data => {
             // Handle response data from Flask if needed
             console.log(data);
-            if(data['message'] == "User already exists!")
+            if(data['message'] === "User already exists!")
             {
                 console.log("Finally works!")
                 setAction("Login")
             }
             else {
             // Go to the main app page
-                const name = '/app/' + user_info.email
+                const name = '/app/' + user_info.userID
                 navigate(name);
             }
         })
@@ -48,8 +46,7 @@ const LoginSignUp = () => {
             console.error('There was a problem with your fetch operation:', error);
         })
         userData({
-            projectID: "",
-            email: "",
+            userID: "",
             password: ""
         })
     }
@@ -70,9 +67,9 @@ const LoginSignUp = () => {
             return response.json();
         })
         .then(data => {
-            if(data['message'] == "Found user data successfully")
+            if(data['message'] === "Found user data successfully")
             {
-                const name = '/app/' + user_info.email
+                const name = '/app/' + user_info.userID
                 navigate(name);
             }
             // Handle response data from Flask if needed
@@ -84,7 +81,7 @@ const LoginSignUp = () => {
             console.error('There was a problem with your fetch operation:', error);
         })
         userData({
-            email: "",
+            userID: "",
             password: ""
         })
     }
@@ -102,13 +99,9 @@ const LoginSignUp = () => {
             <div className='text'>{action}</div>
         </div>
         <div className='input-div'>
-            {action=== "Login"? null : <div className="input">
-                <img src={user_icon} alt="" />
-                <input type="text" placeholder="Project ID" name="projectID" id="" value={user_info.projectID} onChange={handleInputChange}/>
-            </div>}
             <div className="input">
-                <img src={email_icon} alt="" />
-                <input type="email" placeholder="Email" name="email" id="" value={user_info.email} onChange={handleInputChange}/>
+                <img src={user_icon} alt="" />
+                <input type="text" placeholder="User ID" name="userID" id="" value={user_info.userID} onChange={handleInputChange}/>
             </div>
             <div className="input">
                 <img src={password_icon} alt="" />
@@ -116,7 +109,6 @@ const LoginSignUp = () => {
             </div>
         </div>
         {action==="Sign Up"? null :<div className="forgot-password">Don't have an account? <span onClick={()=>{setAction("Sign Up")}}>Click here!</span></div>}
-        {action==="Sign Up"? null :<div className="forgot-password">Forgot Password? <span>Click here!</span></div>}
         {action==="Login"? null :<div className="forgot-password">Already have an account? <span onClick={()=>{setAction("Login")}}>Click here!</span></div>}
         <div className="submit-container">
             <div className="submit" onClick={action==="Sign Up"? handleSignUp : handleLogin}>Submit</div>

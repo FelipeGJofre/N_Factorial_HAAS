@@ -26,7 +26,7 @@ def login(userID, password):
         user = db[userID]
         db_pass = user.find_one({}, {"password" : 1})
         encrypted_password = db_pass["password"]
-        print(encrypted_password)
+        print(decrypt(encrypted_password, 3, 1))
         # If password is the same
         if encrypted_password == encrypt(password, 3, 1):
             return True
@@ -34,62 +34,30 @@ def login(userID, password):
     return False
     
     
-def signup(userID, password, projectID):
-    proj_db = client["Projects"]
-    u_db = client["Users"]
-    if projectID in proj_db.list_collection_names():
-        user = u_db.get_collection(userID)
-        if user == None:
-            collection = u_db.create_collection(userID)
-            projectIDs = [projectID]
-            collection.insert_one(
-                {
-                    "password" : encrypt(password, 3, 1),
-                    "projects" : projectIDs
-                }
-            )
-            return True;
-        
-        # array = user.find_one({}, {"projects"})
-        user.update_one({}, { "$addToSet": {"projects" : projectID} })
-        return True;
-    else:
-        newProj = proj_db.create_collection(projectID)
-        newProj.insert_one(
+def signup(userID, password):
+    if not userID in client["Users"].list_collection_names():
+        user = client["Users"][userID]
+        user.insert_one(
             {
-                "hw_set_1_cap" : 100,
-                "hw_set_1_available" : 100,
-                "hw_set_2_cap" : 100,
-                "hw_set_2_available" : 100,
+                "password" : encrypt(password, 3, 1),
+                "projects" : []
             }
         )
-        user = u_db.get_collection(userID)
-        if user == None:
-            collection = u_db.create_collection(userID)
-            projectIDs = [projectID]
-            collection.insert_one(
-                {
-                    "password" : encrypt(password, 3, 1),
-                    "projects" : projectIDs
-                }
-            )
-            return True;
-        user.update_one({}, { "$addToSet": {"projects" : projectID} })
-        return True;
+        return True
+    else:
+        return False
 
-def get_projects(user) -> dict:
+def getProjects(userID) -> dict:
     dataret = []
-    db = client["Users"]
-    user = db[user]
+    user = client["Users"][userID]
     # Todo: This array not being grabbed properly, shits fucked
     array = user.find_one({}, {"projects"})['projects']
     print(array)
     
-    hw_1_available = array
     projects = client["Projects"]
     for project in array:
-        db_proj = projects[project]
-        selected_proj = db_proj.find_one({})
+        proj = projects[project]
+        selected_proj = proj.find_one({})
         dataret.append({
             "name" : project,
             "hw_set_1_cap" :       selected_proj["hw_set_1_cap"],
@@ -98,3 +66,32 @@ def get_projects(user) -> dict:
             "hw_set_2_available" : selected_proj["hw_set_2_available"] 
         })
     return dataret
+
+def updatehw(projectID, hwset1avail, hwset2avail):
+    proj = client["Projects"][projectID]
+    oldhw1avail = proj.find_one()["hw_set_1_available"]
+    oldhw2avail = proj.find_one()["hw_set_2_available"]
+    query = {"hw_set_1_available": oldhw1avail, "hw_set_2_available": oldhw2avail}
+    newvals = {"$set": {"hw_set_1_available": hwset1avail, "hw_set_2_available": hwset2avail}}
+    print(query, "=>", newvals)
+    proj.update_one(query, newvals)
+
+def join(userID, projectID):
+    user = client["Users"][userID]
+    oldprojlist = user.find_one()["projects"]
+    newprojlist = oldprojlist.copy()
+    newprojlist.append(projectID)
+    query = {"projects": oldprojlist}
+    newval = {"$set": {"projects": newprojlist}}
+    print(query, "=>", newval)
+    user.update_one(query, newval)
+
+def leave(userID, projectID):
+    user = client["Users"][userID]
+    oldprojlist = user.find_one()["projects"]
+    newprojlist = oldprojlist.copy()
+    newprojlist.remove(projectID)
+    query = {"projects": oldprojlist}
+    newval = {"$set": {"projects": newprojlist}}
+    print(query, "=>", newval)
+    user.update_one(query, newval)

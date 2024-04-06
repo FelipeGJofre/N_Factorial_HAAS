@@ -1,129 +1,192 @@
-// child of projects, gets passed what number project
-import React from 'react';
-import JoinButton from './JoinButton'; // Import JoinButton component
+import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
+import './project.css';
 
+const ProjBox = (props) => {
+  const navigate = useNavigate();
+  const [joined, setJoined] = useState(true)
+  const [info, data] = useState({
+    HWSet1_cap: props.HWSet1_cap,
+    HWSet1_available: props.HWSet1_available,
+    HWSet2_cap: props.HWSet2_cap,
+    HWSet2_available: props.HWSet2_available,
+    input1: '',
+    input2: '',
+  })
 
-class Box3 extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      HWSet1_cap: this.props.HWSet1_cap,
-      HWSet1_available: this.props.HWSet1_available,
-      HWSet2_cap: this.props.HWSet2_cap,
-      HWSet2_available: this.props.HWSet2_available,
-      input1: '',
-      input2: '',
-    };
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    console.log(name)
+    data(prevState => ({ 
+        ...prevState,
+        [name]: value }));
   }
 
-  handleInputChange = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-  }
-
-  handleButtonClick1 = () => {
-    const updatedHWSet1 = parseInt(this.state.input1) + this.state.HWSet1;
+  const handleCheckin1 = () => {
+    const updatedHWSet1 = parseInt(info.input1) + info.HWSet1_available;
     if (updatedHWSet1 <= 100) {
-      this.setState(prevState => ({
-        HWSet1: updatedHWSet1
-      }));
+      data(prevState => ({ 
+        ...prevState,
+        HWSet1_available: updatedHWSet1 }));
+      
+      fetch('/updatehw/'+props.name, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({HWSet1_available: updatedHWSet1, HWSet2_available: info.HWSet2_available}),
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .catch(error => {
+          // Handle error
+          console.error('There was a problem with your fetch operation:', error);
+      })
     }
   }
 
-  handleCheckout1 = () => {
-    const updatedHWSet1 = this.state.HWSet1 - parseInt(this.state.input1);
-    if (updatedHWSet1 >= 0) {
-      this.setState(prevState => ({
-        HWSet1: updatedHWSet1
-      }));
+  const handleCheckout1 = () => {
+    const updatedHWSet1 = info.HWSet1_available - parseInt(info.input1);
+    if (updatedHWSet1 >= 0 ) {
+      data(prevState => ({ 
+        ...prevState,
+        HWSet1_available: updatedHWSet1 }));
+
+      fetch('/updatehw/'+props.name, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({HWSet1_available: updatedHWSet1, HWSet2_available: info.HWSet2_available}),
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .catch(error => {
+          // Handle error
+          console.error('There was a problem with your fetch operation:', error);
+      })
     }
   }
 
-  handleButtonClick2 = () => {
-    const updatedHWSet2 = parseInt(this.state.input1) + this.state.HWSet2;
+  const handleCheckin2 = () => {
+    const updatedHWSet2 = parseInt(info.input2) + info.HWSet2_available;
     if (updatedHWSet2 <= 100) {
-      this.setState(prevState => ({
-        HWSet2: updatedHWSet2
-      }));
+      data(prevState => ({ 
+        ...prevState,
+        HWSet2_available: updatedHWSet2 }));
+
+      fetch('/updatehw/'+props.name, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({HWSet1_available: info.HWSet1_available, HWSet2_available: updatedHWSet2}),
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .catch(error => {
+          // Handle error
+          console.error('There was a problem with your fetch operation:', error);
+      })
     }
   }
 
-  handleCheckout2 = () => {
-    const updatedHWSet2 = this.state.HWSet2 - parseInt(this.state.input1);
-    if (updatedHWSet2 >= 0) {
-      this.setState(prevState => ({
-        HWSet2: updatedHWSet2
-      }));
+  const handleCheckout2 = () => {
+    const updatedHWSet2 = info.HWSet2_available - parseInt(info.input2);
+    if (updatedHWSet2 >= 0 ) {
+      data(prevState => ({ 
+        ...prevState,
+        HWSet2_available: updatedHWSet2 }));
+
+      fetch('/updatehw/'+props.name, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({HWSet1_available: info.HWSet1_available, HWSet2_available: updatedHWSet2}),
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .catch(error => {
+          // Handle error
+          console.error('There was a problem with your fetch operation:', error);
+      })
     }
   }
 
-  handleJoinClick = () => {
-    if (this.props.isJoined) {
-      this.props.onJoinClick(null);
-    } else {
-      this.props.onJoinClick(this.props.name);
+  const handleJoinClick = () => {
+    if(joined){
+      fetch('/leaveproj/'+props.user+'/'+props.name, {method: 'POST',})
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .catch(error => {
+          // Handle error
+          console.error('There was a problem with your fetch operation:', error);
+      })
+    }else{
+      fetch('/joinproj/'+props.user+'/'+props.name, {method: 'POST',})
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .catch(error => {
+          // Handle error
+          console.error('There was a problem with your fetch operation:', error);
+      })
     }
+    setJoined(!joined);
   }
 
-  render() {
-    const backgroundColor = this.props.isJoined ? 'green' : 'gray';
-    const joinButtonText = this.props.isJoined ? 'Leave' : 'Join';
-    const isDisabled = !this.props.isJoined;
-
-    return (
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          border: '1px solid black',
-          width: '1000px',
-          height: '200px',
-          padding: '10px',
-          margin: '10px',
-          backgroundColor: backgroundColor,
-          position: 'relative'
-        }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          width: '100%',
-        }}>
-          <strong style={{ fontSize: '24px', marginRight: '20px' }}>Project {this.props.name}</strong>
-          <span>List of authorized users</span>
+  return (
+      <div className="box" style={joined ? {backgroundColor:'#dfdfdf'} : {backgroundColor:'gray'}}>
+        <div className="box-title">
+          <strong style={{ fontSize: '24px', marginRight: '20px'}}>{props.name}</strong>
         </div>
-        <div style={{
-          position: 'absolute',
-          top: '15%',
-          left: '380px',
-          display: 'flex',
-          alignItems: 'center',
-        }}>
-          <strong style={{ fontSize: '24px', marginRight: '20px' }}>HWSet1: {this.state.HWSet1_available}/{this.state.HWSet1_cap}</strong>
-          <input type="text" name="input1" value={this.state.input1} onChange={this.handleInputChange} placeholder="QTY:" style={{ width: '50px', height: '24px', marginRight: '20px' }} disabled={isDisabled} />
-          <button onClick={this.handleButtonClick1} disabled={isDisabled}>Check In</button>
-          <button onClick={this.handleCheckout1} disabled={isDisabled}>Check Out</button>
+        <div className='availcap-container'>
+          <div className="availcap">
+            <strong>HWSet1: {info.HWSet1_available}/{info.HWSet1_cap}</strong>
+            <input type="text" name="input1" value={info.input1} onChange={handleInputChange} placeholder="QTY:" style={{width:'10%', margin:'5px'}} disabled={!joined} />
+            <div className="checkinout">
+              <button onClick={handleCheckin1} disabled={!joined}>Check In</button>
+              <button onClick={handleCheckout1} disabled={!joined}>Check Out</button>
+            </div>
+          </div>
+          <div className="availcap">
+            <strong>HWSet2: {info.HWSet2_available}/{info.HWSet2_cap}</strong>
+            <input type="text" name="input2" value={info.input2} onChange={handleInputChange} placeholder="QTY:" style={{width:'10%', margin:'5px'}} disabled={!joined} />
+            <div className="checkinout">
+              <button onClick={handleCheckin2} disabled={!joined}>Check In</button>
+              <button onClick={handleCheckout2} disabled={!joined}>Check Out</button>
+            </div>
+          </div>
         </div>
-        <div style={{
-            position: 'absolute',
-            top: '65%',
-            left: '380px',
-            display: 'flex',
-            alignItems: 'center',
-        }}>
-            <strong style={{ fontSize: '24px', marginRight: '20px' }}>HWSet2: {this.state.HWSet2_available}/{this.state.HWSet2_cap}</strong>
-            <input style={{ marginRight: '20px', width: '50px', height: '24px' }} type="text" name="input2" value={this.state.input2} onChange={this.handleInputChange} placeholder="QTY:" disabled={isDisabled} />
-            <button onClick={this.handleButtonClick2} disabled={isDisabled}>Check In</button>
-            <button onClick={this.handleCheckout2} disabled={isDisabled}>Check Out</button>
-        </div>
-        <JoinButton
-          isJoined={this.props.isJoined}
-          handleJoinClick={this.handleJoinClick}
-        />
+        <div className="join-container">
+          <div className="join" onClick={handleJoinClick}>{joined ? 'Leave' : 'Join'}</div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
-export default Box3;
+export default ProjBox;

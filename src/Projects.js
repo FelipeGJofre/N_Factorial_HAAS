@@ -1,7 +1,7 @@
 
-import Box3 from './Box3';
+import ProjBox from './Box3';
 import React from 'react';
-import LogOutButton from './log_out'
+import './nfactorial.css';
 
 class Projects extends React.Component {
     constructor(props) {
@@ -9,7 +9,6 @@ class Projects extends React.Component {
       this.state = {
         url: window.location.href, // Get the current URL
         lastString: '',
-        joinedBox: null,
         data: []
       };
     }
@@ -24,7 +23,7 @@ class Projects extends React.Component {
       const lastString = segments.pop(); // Get the last segment
       console.log(lastString)
       this.setState({ lastString });
-      fetch('/get_projects', {
+      fetch('/getProjects', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -39,26 +38,17 @@ class Projects extends React.Component {
         console.error('Error:', error);
       });
     }
-
-    handleJoinClick = (boxLetter) => {
-      this.setState({ joinedBox: boxLetter });
-    }
   
     render() {
       console.log(this.state.data)
       return (
         <div>
           {this.state.data.map((proj) => (
-            <Box3 name={proj.name} HWSet1_cap={proj.hw_set_1_cap}  HWSet1_available={proj.hw_set_1_available} HWSet2_cap={proj.hw_set_2_cap} HWSet2_available={proj.hw_set_2_available} onJoinClick={this.handleJoinClick} isJoined={this.state.joinedBox === "1"} />
+            <ProjBox name={proj.name} user={this.state.lastString} HWSet1_cap={proj.hw_set_1_cap}  HWSet1_available={proj.hw_set_1_available} HWSet2_cap={proj.hw_set_2_cap} HWSet2_available={proj.hw_set_2_available} />
           ))}
-          <LogOutButton></LogOutButton>
         </div>
       );
     }
   }
 
   export default Projects;
-
-            /* <Box3 name="1" onJoinClick={this.handleJoinClick} isJoined={this.state.joinedBox === "1"} />
-          <Box3 name="2" onJoinClick={this.handleJoinClick} isJoined={this.state.joinedBox === "2"} />
-          <Box3 name="3" onJoinClick={this.handleJoinClick} isJoined={this.state.joinedBox === "3"} /> */
