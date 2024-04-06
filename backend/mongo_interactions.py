@@ -95,3 +95,15 @@ def leave(userID, projectID):
     newval = {"$set": {"projects": newprojlist}}
     print(query, "=>", newval)
     user.update_one(query, newval)
+
+def newProject(projectID):
+    if not projectID in client["Projects"].list_collection_names():
+        newproj = client["Projects"][projectID]
+        newprojdoc = {"hw_set_1_cap": 100,
+                        "hw_set_1_available": 100,
+                        "hw_set_2_cap": 100,
+                        "hw_set_2_available": 100}
+        newproj.insert_one(newprojdoc)
+        return True
+    return False
+

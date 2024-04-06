@@ -1,4 +1,3 @@
-
 import ProjBox from './Box3';
 import React from 'react';
 import './nfactorial.css';
@@ -9,7 +8,9 @@ class Projects extends React.Component {
       this.state = {
         url: window.location.href, // Get the current URL
         lastString: '',
-        data: []
+        data: [],
+        neworexisting: true,
+        projID: ''
       };
     }
 
@@ -23,12 +24,22 @@ class Projects extends React.Component {
       const lastString = segments.pop(); // Get the last segment
       console.log(lastString)
       this.setState({ lastString });
+      this.populateProjects(lastString);
+    }
+
+    handleInputChange = (event) => {
+      const { name, value } = event.target;
+      console.log(name)
+      this.setState({[name]: value});
+    }
+
+    populateProjects = (userID) => {
       fetch('/getProjects', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ data: lastString })
+        body: JSON.stringify({ data: userID })
       })
       .then(response => response.json())
       .then(data => {
@@ -38,6 +49,53 @@ class Projects extends React.Component {
         console.error('Error:', error);
       });
     }
+
+    handleNewProject = () => {
+      fetch('/newproj/'+this.state.lastString, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({newprojectID: this.state.projID}),
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .then(data => {
+          // Handle response data from Flask if needed
+          console.log(data);
+          if(data['message'] === "Project already exists!")
+          {
+              this.setState({neworexisting: false})
+          }
+          else {
+          // Go to the main app page
+            this.populateProjects(this.state.lastString);
+          }
+      })
+      .catch(error => {
+          // Handle error
+          console.error('There was a problem with your fetch operation:', error);
+      })
+    }
+
+    handleJoinProject = () => {
+      fetch('/joinproj/'+this.state.lastString+'/'+this.state.projID, {method: 'POST',})
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          this.populateProjects(this.state.lastString);
+          return response.json();
+      })
+      .catch(error => {
+          // Handle error
+          console.error('There was a problem with your fetch operation:', error);
+      })
+    }
   
     render() {
       console.log(this.state.data)
@@ -46,6 +104,20 @@ class Projects extends React.Component {
           {this.state.data.map((proj) => (
             <ProjBox name={proj.name} user={this.state.lastString} HWSet1_cap={proj.hw_set_1_cap}  HWSet1_available={proj.hw_set_1_available} HWSet2_cap={proj.hw_set_2_cap} HWSet2_available={proj.hw_set_2_available} />
           ))}
+          {this.state.neworexisting ? null :
+              <div className="forgot-password">
+                Want to create a new project? <span onClick={()=>{this.setState({neworexisting: true})}}>Click here!</span>
+              </div>
+          }
+          {(!this.state.neworexisting) ? null :
+              <div className="forgot-password">
+                Want to join an existing project? <span onClick={()=>{this.setState({neworexisting: false})}}>Click here!</span>
+              </div>
+          }
+          <div className="newproject-container">
+            <input type="text" name="projID" value={this.state.projID} onChange={this.handleInputChange} placeholder={this.state.neworexisting ? 'New ProjectID' : 'Existing ProjectID'} style={{width:'85%', margin:'5px'}}/>
+            <div className="newproj" onClick={this.state.neworexisting ? this.handleNewProject : this.handleJoinProject}>{this.state.neworexisting ? 'Create Project' : 'Join Project'}</div>
+          </div>
         </div>
       );
     }

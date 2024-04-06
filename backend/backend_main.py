@@ -79,6 +79,16 @@ def leaveProject(userID, projectID):
     mongo_interactions.leave(userID, projectID)
     return jsonify({'message': f"{userID} left {projectID}", 'projectId': projectID})
 
+@app.route("/newproj/<userID>", methods=["POST"])
+def newProject(userID):
+    querydata = request.json
+    projectID = querydata['newprojectID']
+    print(userID, "created new Project", projectID)
+    if mongo_interactions.newProject(projectID):
+        mongo_interactions.join(userID, projectID)
+        return jsonify({'message': f"{userID} created new Project {projectID}", 'projectId': projectID})
+    return jsonify({'message': 'Project already exists!'})
+
 if __name__ == "__main__":
     mongo_interactions.setup()
     app.run()
