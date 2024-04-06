@@ -22,8 +22,8 @@ def setup():
 def login(userID, password):
     db = client["Users"]
     # Checks if user is a collection
-    if userID in db.list_collection_names():
-        user = db[userID]
+    if encrypt(userID, 3, 1) in db.list_collection_names():
+        user = db[encrypt(userID, 3, 1)]
         db_pass = user.find_one({}, {"password" : 1})
         encrypted_password = db_pass["password"]
         print(decrypt(encrypted_password, 3, 1))
@@ -34,11 +34,12 @@ def login(userID, password):
     return False
     
     
-def signup(userID, password):
-    if not userID in client["Users"].list_collection_names():
-        user = client["Users"][userID]
+def signup(username, userID, password):
+    if not encrypt(userID, 3, 1) in client["Users"].list_collection_names():
+        user = client["Users"][encrypt(userID, 3, 1)]
         user.insert_one(
             {
+                "username" : username,
                 "password" : encrypt(password, 3, 1),
                 "projects" : []
             }
@@ -46,10 +47,15 @@ def signup(userID, password):
         return True
     else:
         return False
+    
+def getUsername(userID):
+    if encrypt(userID, 3, 1) in client["Users"].list_collection_names():
+        return client["Users"][encrypt(userID, 3, 1)].find_one()['username']
+    return ""
 
 def getProjects(userID) -> dict:
     dataret = []
-    user = client["Users"][userID]
+    user = client["Users"][encrypt(userID, 3, 1)]
     # Todo: This array not being grabbed properly, shits fucked
     array = user.find_one({}, {"projects"})['projects']
     print(array)
@@ -77,7 +83,7 @@ def updatehw(projectID, hwset1avail, hwset2avail):
     proj.update_one(query, newvals)
 
 def join(userID, projectID):
-    user = client["Users"][userID]
+    user = client["Users"][encrypt(userID, 3, 1)]
     oldprojlist = user.find_one()["projects"]
     newprojlist = oldprojlist.copy()
     newprojlist.append(projectID)
@@ -87,7 +93,7 @@ def join(userID, projectID):
     user.update_one(query, newval)
 
 def leave(userID, projectID):
-    user = client["Users"][userID]
+    user = client["Users"][encrypt(userID, 3, 1)]
     oldprojlist = user.find_one()["projects"]
     newprojlist = oldprojlist.copy()
     newprojlist.remove(projectID)

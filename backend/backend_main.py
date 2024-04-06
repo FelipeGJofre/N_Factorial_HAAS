@@ -13,9 +13,9 @@ def signup():
     # Process the received data
     # check_file = open("database.txt", "r")
     # Check whether it exists already or not
-    print("UserID:", data['userID'], "attempting signup")
-    if mongo_interactions.signup(data['userID'], data['password']):
-        print("Welcome, " + data['userID']) 
+    print("Username:", data['username'], "attempting signup")
+    if mongo_interactions.signup(data['username'], data['userID'], data['password']):
+        print("Welcome, " + data['username']) 
         return jsonify({'message': 'Received sign up data successfully'})
     return jsonify({'message': 'User already exists!'})
     # for line in check_file.readlines():
@@ -41,7 +41,7 @@ def login():
         print("Hello, " + querydata['userID'])
         return jsonify({'message': 'Found user data successfully'})
     print("No succesful login")
-    return ({'message': 'Did not find user data'})
+    return jsonify({'message': 'Did not find user data'})
     # file = open("database.txt", "r")
     # for line in file.readlines():
     #     dbdata = json.loads(decrypt(line.strip(), 3, 1))
@@ -50,6 +50,12 @@ def login():
     # file.close()
     # print(rtnmsg)
     # return jsonify({'message': 'Found user data successfully'})
+
+@app.route("/getusername/<userID>", methods=["POST"])
+def getUsername(userID):
+    requested_username = mongo_interactions.getUsername(userID)
+    print(userID, "<--->", requested_username)
+    return jsonify({'message': f"retrieved username for user {userID}", 'username': requested_username})
 
 @app.route("/getProjects", methods=["GET", "POST"])
 def getProjects():

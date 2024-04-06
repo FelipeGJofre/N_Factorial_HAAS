@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import './nfactorial.css'
 import user_icon from './Assets/person.png'
+import id_icon from './Assets/email.png'
 import password_icon from './Assets/password.png'
 
 const LoginSignUp = () => {
     const navigate = useNavigate();
     const [action, setAction] = useState("Sign Up")
     const [user_info, userData] = useState({
+        username: "",
         userID: "",
         password: ""
     })
@@ -46,6 +48,7 @@ const LoginSignUp = () => {
             console.error('There was a problem with your fetch operation:', error);
         })
         userData({
+            username: "",
             userID: "",
             password: ""
         })
@@ -81,6 +84,7 @@ const LoginSignUp = () => {
             console.error('There was a problem with your fetch operation:', error);
         })
         userData({
+            username: "",
             userID: "",
             password: ""
         })
@@ -99,8 +103,14 @@ const LoginSignUp = () => {
             <div className='text'>{action}</div>
         </div>
         <div className='input-div'>
+            {action==="Login" ? null :
+                <div className="input">
+                    <img src={user_icon} alt="" />
+                    <input type="text" placeholder="Username" name="username" id="" value={user_info.username} onChange={handleInputChange}/>
+                </div>
+            }
             <div className="input">
-                <img src={user_icon} alt="" />
+                <img src={id_icon} alt="" />
                 <input type="text" placeholder="User ID" name="userID" id="" value={user_info.userID} onChange={handleInputChange}/>
             </div>
             <div className="input">
