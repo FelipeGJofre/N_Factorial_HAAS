@@ -89,7 +89,8 @@ def join(userID, projectID):
         user = client["Users"][encrypt(userID, 3, 1)]
         oldprojlist = user.find_one()["projects"]
         newprojlist = oldprojlist.copy()
-        newprojlist.append(projectID)
+        if not projectID in newprojlist:
+            newprojlist.append(projectID)
         query = {"projects": oldprojlist}
         newval = {"$set": {"projects": newprojlist}}
         print(query, "=>", newval)
